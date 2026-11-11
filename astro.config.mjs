@@ -3,10 +3,10 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-// 只需要改这一处：把 YOURNAME 换成你的 GitHub 用户名。
-// 如果以后绑定自定义域名，改成 'https://你的域名' 即可，其他不用动。
+// 站点地址：GitHub Pages 的域名一律是小写，这里也保持小写。
+// 绑定自定义域名时改成 'https://你的域名' 即可，其他不用动。
 export default defineConfig({
-  site: 'https://Yharime.github.io',
+  site: 'https://yharime.github.io',
   markdown: {
     processor: unified({
       remarkPlugins: [remarkMath],

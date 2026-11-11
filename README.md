@@ -88,15 +88,15 @@ tags: ['Git']
 
 只需要做一次：
 
-1. 在 GitHub 新建仓库，名字填 `<你的用户名>.github.io`（必须完全一致）。
-2. 把本项目推上去：
+1. 在 GitHub 新建仓库，名字填 `<你的用户名>.github.io`（必须完全一致）。**不要勾选** "Add a README"、".gitignore" 这些初始化选项，否则推送时会冲突。
+2. 把本项目推上去（下面命令里的尖括号是占位符说明，**真正执行时要把尖括号删掉**，否则 bash 会把它当成重定向符号报错）：
 
 ```bash
 git init
 git add -A
 git commit -m "init"
 git branch -M main
-git remote add origin https://github.com/<你的用户名>/<你的用户名>.github.io.git
+git remote add origin https://github.com/你的用户名/你的用户名.github.io.git
 git push -u origin main
 ```
 
