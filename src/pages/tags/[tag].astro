@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../../components/Timeline.astro';
+import { getEntriesByTag, getTagCounts } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const tags = await getTagCounts();
+  return tags.map(({ tag }) => ({ params: { tag }, props: { tag } }));
+}
+
+const { tag } = Astro.props;
+const items = await getEntriesByTag(tag);
+---
+
+<BaseLayout title={`标签：${tag}`}>
+  <h1 class="page-title">#{tag}</h1>
+  <Timeline items={items} />
+  <a class="back-link" href="/tags/">← 所有标签</a>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { displayDate, getNotes, isoDate, noteTitle } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  return notes.map((note) => ({ params: { id: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<BaseLayout title={noteTitle(note)} type="article">
+  <article>
+    <header class="post-head">
+      <h1>{noteTitle(note)}</h1>
+      <div class="post-meta">
+        <time datetime={isoDate(note.data.date)}>{displayDate(note.data.date)}</time>
+        {
+          note.data.tags.length > 0 && (
+            <span class="tags">
+              {note.data.tags.map((tag) => (
+                <a class="tag" href={`/tags/${tag}/`}>
+                  {tag}
+                </a>
+              ))}
+            </span>
+          )
+        }
+      </div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <a class="back-link" href="/">← 返回时间线</a>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import { SITE } from '../consts';
+
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: '时间线' },
+  { href: '/tags/', label: '标签' },
+  { href: '/about/', label: '关于' },
+];
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/">{SITE.title}</a>
+    <nav>
+      {
+        links.map((link) => (
+          <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

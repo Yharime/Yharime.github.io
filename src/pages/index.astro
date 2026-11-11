@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import { getTimeline } from '../lib/content';
+import { SITE } from '../consts';
+
+const items = await getTimeline();
+---
+
+<BaseLayout>
+  <section class="intro">
+    <h1 class="sr-only">{SITE.title}</h1>
+    <p class="lead">{SITE.description}</p>
+  </section>
+  <Timeline items={items} />
+</BaseLayout>

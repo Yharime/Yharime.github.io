@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTagCounts } from '../../lib/content';
+
+const tags = await getTagCounts();
+---
+
+<BaseLayout title="标签">
+  <h1 class="page-title">标签</h1>
+  {
+    tags.length === 0 ? (
+      <p class="empty">还没有标签。在文章开头写一行 tags: ['标签名'] 就会自动出现在这里。</p>
+    ) : (
+      <div class="tag-cloud">
+        {tags.map(({ tag, count }) => (
+          <a class="tag" href={`/tags/${tag}/`}>
+            {tag}
+            <span class="count">{count}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</BaseLayout>

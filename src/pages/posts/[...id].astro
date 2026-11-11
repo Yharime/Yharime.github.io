@@ -1,0 +1,41 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { displayDate, getPosts, isoDate, readingTime } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} type="article">
+  <article>
+    <header class="post-head">
+      <h1>{post.data.title}</h1>
+      <div class="post-meta">
+        <time datetime={isoDate(post.data.date)}>{displayDate(post.data.date)}</time>
+        <span>·</span>
+        <span>约 {readingTime(post.body)} 分钟</span>
+        {
+          post.data.tags.length > 0 && (
+            <span class="tags">
+              {post.data.tags.map((tag) => (
+                <a class="tag" href={`/tags/${tag}/`}>
+                  {tag}
+                </a>
+              ))}
+            </span>
+          )
+        }
+      </div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <a class="back-link" href="/">← 返回时间线</a>
+</BaseLayout>

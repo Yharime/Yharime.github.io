@@ -1,0 +1,25 @@
+---
+import { displayDate, isoDate, type TimelineItem } from '../lib/content';
+
+interface Props {
+  items: TimelineItem[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length === 0 ? (
+    <p class="empty">这里还是空的，写第一篇吧。</p>
+  ) : (
+    <ul class="timeline">
+      {items.map((item) => (
+        <li>
+          <time datetime={isoDate(item.date)}>{displayDate(item.date)}</time>
+          <a href={item.href}>{item.title}</a>
+          {item.type === 'note' ? <span class="kind">笔记</span> : <span />}
+        </li>
+      ))}
+    </ul>
+  )
+}
