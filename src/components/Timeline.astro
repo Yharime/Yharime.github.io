@@ -1,11 +1,26 @@
 ---
-import { displayDate, isoDate, type TimelineItem } from '../lib/content';
+import { isoDate, shortDate, type TimelineItem } from '../lib/content';
 
 interface Props {
   items: TimelineItem[];
 }
 
 const { items } = Astro.props;
+
+// 按年份切成「年份锚点 + 该年条目」，条目的先后顺序不变
+type Row = { kind: 'year'; year: string } | { kind: 'item'; item: TimelineItem };
+
+const rows: Row[] = [];
+let currentYear = '';
+
+for (const item of items) {
+  const year = isoDate(item.date).slice(0, 4);
+  if (year !== currentYear) {
+    rows.push({ kind: 'year', year });
+    currentYear = year;
+  }
+  rows.push({ kind: 'item', item });
+}
 ---
 
 {
@@ -13,13 +28,21 @@ const { items } = Astro.props;
     <p class="empty">这里还是空的，写第一篇吧。</p>
   ) : (
     <ul class="timeline">
-      {items.map((item) => (
-        <li>
-          <time datetime={isoDate(item.date)}>{displayDate(item.date)}</time>
-          <a href={item.href}>{item.title}</a>
-          {item.type === 'note' ? <span class="kind">笔记</span> : <span />}
-        </li>
-      ))}
+      {rows.map((row) =>
+        row.kind === 'year' ? (
+          <li class="year">
+            <span>{row.year}</span>
+          </li>
+        ) : (
+          <li>
+            <a class="row-link" href={row.item.href}>
+              <time datetime={isoDate(row.item.date)}>{shortDate(row.item.date)}</time>
+              <span class="title">{row.item.title}</span>
+              {row.item.type === 'note' ? <span class="kind">笔记</span> : null}
+            </a>
+          </li>
+        ),
+      )}
     </ul>
   )
 }

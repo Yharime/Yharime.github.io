@@ -75,6 +75,11 @@ export function displayDate(date: Date): string {
   return isoDate(date).replaceAll('-', '.');
 }
 
+// 时间线里年份已有锚点，条目只显示月日，避免重复
+export function shortDate(date: Date): string {
+  return isoDate(date).slice(5).replace('-', '.');
+}
+
 export function readingTime(body = ''): number {
   const cjk = (body.match(/[\u4e00-\u9fa5]/g) ?? []).length;
   const words = (body.match(/[a-zA-Z0-9]+/g) ?? []).length;
