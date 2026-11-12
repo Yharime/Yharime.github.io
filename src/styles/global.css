@@ -52,7 +52,7 @@ body::after {
 
 body::before {
   z-index: -2;
-  background: #221a32 url('/images/bg.webp') center center / cover no-repeat;
+  background: #221a32 url('/images/bg.webp?v=3') center center / cover no-repeat;
   transform: scale(1.03);
   animation: bg-drift 80s ease-in-out infinite alternate;
 }
@@ -88,7 +88,7 @@ body::after {
 /* 窄屏换成竖幅版本，并把人物放到卡片下方，避免卡片切在脸上 */
 @media (max-width: 640px) {
   body::before {
-    background-image: url('/images/bg-mobile.webp');
+    background-image: url('/images/bg-mobile.webp?v=3');
     background-size: auto 120%;
     background-position: center top;
   }
@@ -744,7 +744,7 @@ main {
   }
 
   body::before {
-    background-image: url('/images/bg-mobile.webp');
+    background-image: url('/images/bg-mobile.webp?v=3');
     background-size: cover;
     background-position: center top;
   }
@@ -779,7 +779,7 @@ main {
 /* 接近方形的视口：加宽壁纸只剩很窄一条，改回竖幅取景，人物从卡片下方露出来 */
 @media (min-width: 900px) and (max-aspect-ratio: 5/4) {
   body::before {
-    background-image: url('/images/bg-mobile.webp');
+    background-image: url('/images/bg-mobile.webp?v=3');
     background-size: cover;
     background-position: center top;
   }
