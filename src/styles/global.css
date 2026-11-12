@@ -15,9 +15,9 @@
   --soft-active: #efebe4;
   --accent: #1d5c8f;
   --accent-deep: #154263;
-  --width: 46rem;
+  --width: 42rem;
   --gutter: 1.25rem;
-  --panel: rgba(253, 252, 250, 0.95);
+  --panel: rgba(253, 252, 250, 0.92);
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas,
@@ -750,30 +750,37 @@ main {
   }
 }
 
-/* 宽屏：阅读列靠左，人物留在右侧。
-   壁纸里伊蕾娜位于画面中线，居中卡片会正好压住她的脸；
-   靠左之后两者各占一边，互不遮挡。
-   卡片宽度随视口收缩，因为这个区间里她始终落在约 50% 处。 */
+/* 宽屏：阅读列居中；壁纸是加宽过的（2.22:1，人物被放到右侧），
+   取景窗越靠左，人物在屏幕上越靠右，正好让开居中的卡片。 */
 @media (min-width: 900px) {
   :root {
-    --width: min(42rem, 40vw);
-    --col-left: clamp(1.5rem, 6vw, 9rem);
+    --width: min(36rem, 86vw);
   }
 
+  /* 壁纸是加宽版（2.22:1）。视口越扁，取景窗越要往左挪，
+     人物才能稳定落在居中卡片的右侧 */
   body::before {
-    background-position: left center;
-  }
-
-  .site-header .inner,
-  main,
-  .site-footer .inner {
-    margin-left: var(--col-left);
-    margin-right: auto;
+    background-position: 30% center;
   }
 }
 
-@media (min-width: 1680px) {
-  :root {
-    --width: 42rem;
+@media (min-width: 900px) and (min-aspect-ratio: 3/2) {
+  body::before {
+    background-position: 22% center;
+  }
+}
+
+@media (min-width: 900px) and (min-aspect-ratio: 16/9) {
+  body::before {
+    background-position: 0% center;
+  }
+}
+
+/* 接近方形的视口：加宽壁纸只剩很窄一条，改回竖幅取景，人物从卡片下方露出来 */
+@media (min-width: 900px) and (max-aspect-ratio: 5/4) {
+  body::before {
+    background-image: url('/images/bg-mobile.webp');
+    background-size: cover;
+    background-position: center top;
   }
 }
