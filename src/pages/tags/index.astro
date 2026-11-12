@@ -11,14 +11,16 @@ const tags = await getTagCounts();
     tags.length === 0 ? (
       <p class="empty">还没有标签。在文章开头写一行 tags: ['标签名'] 就会自动出现在这里。</p>
     ) : (
-      <div class="tag-cloud">
+      <ul class="tag-list">
         {tags.map(({ tag, count }) => (
-          <a class="tag" href={`/tags/${tag}/`}>
-            {tag}
-            <span class="count">{count}</span>
-          </a>
+          <li>
+            <a href={`/tags/${tag}/`}>
+              <span class="tag">{tag}</span>
+              <span class="count">{count} 篇</span>
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     )
   }
 </BaseLayout>
