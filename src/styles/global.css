@@ -17,7 +17,7 @@
   --accent-deep: #154263;
   --width: 46rem;
   --gutter: 1.25rem;
-  --panel: rgba(253, 252, 250, 0.94);
+  --panel: rgba(253, 252, 250, 0.95);
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas,
@@ -26,7 +26,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  background: var(--bg);
+  background: #221a32;
 }
 
 body {
@@ -41,7 +41,7 @@ body {
   min-height: 100vh;
 }
 
-/* 背景分两层：壁纸 + 暖白蒙层，蒙层保证正文对比度 */
+/* 背景两层：壁纸（可缓慢漂移）+ 极轻的压暗蒙层，保证顶栏与页脚的可读性 */
 body::before,
 body::after {
   content: '';
@@ -52,17 +52,46 @@ body::after {
 
 body::before {
   z-index: -2;
-  background: url('/images/bg.webp') center center / cover no-repeat;
+  background: #221a32 url('/images/bg.webp') center center / cover no-repeat;
+  transform: scale(1.03);
+  animation: bg-drift 80s ease-in-out infinite alternate;
+}
+
+@keyframes bg-drift {
+  from {
+    transform: scale(1.03) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.09) translate3d(-1.2%, -1.6%, 0);
+  }
+}
+
+/* 系统开了「减少动态效果」就停在静止的一帧 */
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+    transform: scale(1.05);
+  }
 }
 
 body::after {
   z-index: -1;
   background: linear-gradient(
     180deg,
-    rgba(253, 252, 250, 0.52) 0%,
-    rgba(253, 252, 250, 0.68) 45%,
-    rgba(253, 252, 250, 0.84) 100%
+    rgba(22, 16, 34, 0.34) 0%,
+    rgba(22, 16, 34, 0.1) 22%,
+    rgba(22, 16, 34, 0.08) 72%,
+    rgba(22, 16, 34, 0.26) 100%
   );
+}
+
+/* 窄屏换成竖幅版本，并把人物放到卡片下方，避免卡片切在脸上 */
+@media (max-width: 640px) {
+  body::before {
+    background-image: url('/images/bg-mobile.webp');
+    background-size: auto 120%;
+    background-position: center top;
+  }
 }
 
 ::selection {
@@ -91,8 +120,9 @@ img {
   top: 0;
   z-index: 10;
   border-bottom: 1px solid var(--line);
-  background: rgba(253, 252, 250, 0.72);
-  backdrop-filter: blur(14px);
+  background: rgba(253, 252, 250, 0.8);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05);
+  backdrop-filter: blur(16px) saturate(1.05);
 }
 
 .site-header .inner {
@@ -157,7 +187,9 @@ main {
   border: 1px solid rgba(28, 27, 25, 0.1);
   border-top: 2px solid var(--accent);
   border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(28, 27, 25, 0.05);
+  box-shadow:
+    0 1px 2px rgba(10, 8, 18, 0.14),
+    0 18px 44px -14px rgba(10, 8, 18, 0.45);
   flex: 0 0 auto;
 }
 
@@ -594,8 +626,11 @@ main {
 /* 页脚 */
 .site-footer {
   margin-top: auto;
-  border-top: 1px solid rgba(28, 27, 25, 0.08);
-  padding: 1.6rem var(--gutter) 2.2rem;
+  background: rgba(253, 252, 250, 0.82);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05);
+  backdrop-filter: blur(16px) saturate(1.05);
+  border-top: 1px solid rgba(28, 27, 25, 0.1);
+  padding: 1.3rem var(--gutter) 1.5rem;
 }
 
 .site-footer .inner {
@@ -606,7 +641,7 @@ main {
   gap: 1rem;
   flex-wrap: wrap;
   font-size: 0.8rem;
-  color: var(--faint);
+  color: var(--muted);
 }
 
 .site-footer a {
@@ -698,5 +733,47 @@ main {
 
   .post-head h1 {
     font-size: 1.5rem;
+  }
+}
+
+/* 平板竖屏这一档：横向壁纸放不下，改用竖幅取景 + 居中卡片，
+   人物被推到卡片下方，和手机端同一套构图 */
+@media (min-width: 641px) and (max-width: 899px) {
+  :root {
+    --width: min(42rem, 88vw);
+  }
+
+  body::before {
+    background-image: url('/images/bg-mobile.webp');
+    background-size: cover;
+    background-position: center top;
+  }
+}
+
+/* 宽屏：阅读列靠左，人物留在右侧。
+   壁纸里伊蕾娜位于画面中线，居中卡片会正好压住她的脸；
+   靠左之后两者各占一边，互不遮挡。
+   卡片宽度随视口收缩，因为这个区间里她始终落在约 50% 处。 */
+@media (min-width: 900px) {
+  :root {
+    --width: min(42rem, 40vw);
+    --col-left: clamp(1.5rem, 6vw, 9rem);
+  }
+
+  body::before {
+    background-position: left center;
+  }
+
+  .site-header .inner,
+  main,
+  .site-footer .inner {
+    margin-left: var(--col-left);
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1680px) {
+  :root {
+    --width: 42rem;
   }
 }
